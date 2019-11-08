@@ -22,7 +22,7 @@ public class Receipt {
     private Double cost;
 
     @ColumnInfo(name = "company")
-    private Double company;
+    private String company;
 
     @ColumnInfo(name = "date_time")
     @TypeConverters(DateConverter.class)
