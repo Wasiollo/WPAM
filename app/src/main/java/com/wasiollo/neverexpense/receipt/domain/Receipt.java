@@ -3,6 +3,9 @@ package com.wasiollo.neverexpense.receipt.domain;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
+import com.wasiollo.neverexpense.converters.DateConverter;
 
 import java.util.Date;
 
@@ -22,6 +25,7 @@ public class Receipt {
     private Double company;
 
     @ColumnInfo(name = "date_time")
+    @TypeConverters(DateConverter.class)
     private Date dateTime;
 
     @ColumnInfo(name = "user_id")
