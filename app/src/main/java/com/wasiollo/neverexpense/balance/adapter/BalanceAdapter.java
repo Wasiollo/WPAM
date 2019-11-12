@@ -1,4 +1,4 @@
-package com.wasiollo.neverexpense.balance;
+package com.wasiollo.neverexpense.balance.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;

@@ -1,5 +1,6 @@
 package com.wasiollo.neverexpense.receipt.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -15,7 +16,7 @@ import java.util.List;
 public abstract class ReceiptDao {
 
     @Insert
-    protected abstract void insert(Receipt receipt);
+    public abstract void insert(Receipt receipt);
 
     @Insert
     protected abstract void insert(List<Product> products);
@@ -26,6 +27,15 @@ public abstract class ReceiptDao {
         insert(receiptWithProducts.getProducts());
     }
 
+    @Query("DELETE FROM receipt")
+    public abstract void deleteAll();
+
     @Query("SELECT * FROM receipt")
-    public abstract List<ReceiptWithProducts> getAll();
+    public abstract LiveData<List<Receipt>> getAllReceipts();
+
+    @Query("SELECT * FROM receipt r WHERE r.balance_id = :balanceId")
+    public abstract LiveData<List<Receipt>> getReceiptsByBalanceId(Integer balanceId);
+
+    @Query("SELECT * FROM receipt r WHERE r.id = :receiptId")
+    public abstract LiveData<Receipt> getReceiptById(Integer receiptId);
 }

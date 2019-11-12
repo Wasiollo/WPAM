@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".receipt.AddingReceiptActivity"
+    tools:showIn="@layout/adding_activity">
+
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="0dp"
+
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp"
+        android:background="@color/lightBackgroundColor"
+        android:text="@string/button_save"
+        android:textColor="@color/addButtonColor"
+
+        app:layout_constraintBottom_toTopOf="@id/sumLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_weight="1" />
+
+    <TextView
+        android:id="@+id/sumLabel"
+
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp"
+
+        android:text="@string/sumLabel"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/balanceRecyclerView"
+        app:layout_constraintEnd_toStartOf="@id/sum"
+        app:layout_constraintHorizonal_weight="2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="save_button"
+        app:layout_constraintVertical_weight="1" />
+
+    <EditText
+        android:id="@+id/sum"
+
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp"
+
+        android:hint="@string/hint_word"
+        android:inputType="textAutoComplete"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/balanceRecyclerView"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizonal_weight="3"
+        app:layout_constraintStart_toEndOf="@id/sumLabel"
+        app:layout_constraintTop_toBottomOf="save_button"
+        app:layout_constraintVertical_weight="1"
+
+        />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/balanceRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sumLabel"
+        app:layout_constraintVertical_weight="1"
+        tools:listitem="@layout/adding_recycler_view_item" />
+</androidx.constraintlayout.widget.ConstraintLayout>

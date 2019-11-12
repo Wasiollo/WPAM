@@ -6,8 +6,8 @@
     <color name="basicBackgroundColor">#D5D5D5</color>
     <color name="lightBackgroundColor">#EEEEEE</color>
 
-
-
     <color name="addButtonColor">@color/colorPrimary</color>
     <color name="addButtonCrossColor">@color/basicBackgroundColor</color>
+
+    <color name="saveButtonColor">#d3d3d3</color>
 </resources>

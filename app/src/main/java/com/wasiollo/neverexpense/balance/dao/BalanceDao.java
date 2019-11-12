@@ -1,7 +1,9 @@
 package com.wasiollo.neverexpense.balance.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.Query;
 import androidx.room.Transaction;
 
 import com.wasiollo.neverexpense.balance.domain.Balance;
@@ -14,7 +16,7 @@ import java.util.List;
 public abstract class BalanceDao {
 
     @Insert
-    protected abstract void insert(Balance balance);
+    public abstract void insert(Balance balance);
 
     @Insert
     protected abstract void insert(List<Receipt> receipts);
@@ -25,4 +27,11 @@ public abstract class BalanceDao {
         insert(balanceWithReceipts.getReceipts());
     }
 
+    @Query("SELECT * FROM balance b " +
+            "JOIN user_balance_join uj " +
+            "WHERE uj.user_id = :userId")
+    public abstract LiveData<List<Balance>> findByUserId(Integer userId);
+
+    @Query("SELECT * FROM balance b WHERE b.id = :balanceId")
+    public abstract LiveData<Balance> findById(Integer balanceId);
 }
