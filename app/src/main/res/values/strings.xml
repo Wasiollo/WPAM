@@ -4,6 +4,6 @@
     <string name="action_logout">Logout</string>
     <string name="button_save">Save</string>
     <string name="product_price_empty">Product not saved because price is empty.</string>
-    <string name="hint_word">suma</string>
+    <string name="hint_word">Wprowadź sumę</string>
     <string name="sumLabel">Suma</string>
 </resources>

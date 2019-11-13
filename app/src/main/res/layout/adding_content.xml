@@ -38,7 +38,8 @@
         android:layout_marginBottom="0dp"
 
         android:text="@string/sumLabel"
-        android:textSize="18sp"
+        android:textSize="28sp"
+        android:gravity="center"
         app:layout_constraintBottom_toTopOf="@id/balanceRecyclerView"
         app:layout_constraintEnd_toStartOf="@id/sum"
         app:layout_constraintHorizontal_weight="2"

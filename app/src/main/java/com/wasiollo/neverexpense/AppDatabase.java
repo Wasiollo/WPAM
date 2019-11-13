@@ -66,7 +66,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 receiptDao.deleteAll();
 
                 Receipt receipt1 = new Receipt();
-                receipt1.setCompany("Aa");
+                receipt1.setCompany("Biedronka");
                 receipt1.setCost(123.44);
                 receipt1.setDateTime(new Date());
                 receipt1.setId(1);
@@ -74,7 +74,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 receipt1.setBalanceId(1);
 
                 Receipt receipt2 = new Receipt();
-                receipt2.setCompany("Bb");
+                receipt2.setCompany("Lidl");
                 receipt2.setCost(166.44);
                 receipt2.setDateTime(new Date());
                 receipt2.setId(2);

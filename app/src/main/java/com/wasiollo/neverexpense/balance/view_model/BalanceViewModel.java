@@ -26,15 +26,15 @@ public class BalanceViewModel extends AndroidViewModel {
         receiptRepository = new ReceiptRepository(application);
     }
 
-    LiveData<Balance> getBalanceById(Integer balanceId) {
+    public LiveData<Balance> getBalanceById(Integer balanceId) {
         return balanceRepository.getBalanceById(balanceId);
     }
 
-    LiveData<List<Balance>> getBalancesByUserId(Integer userId){
+    public LiveData<List<Balance>> getBalancesByUserId(Integer userId){
         return balanceRepository.getBalancesByUserId(userId);
     }
 
-    LiveData<List<Receipt>> getReceiptsByBalanceId(Integer balanceId){
+    public LiveData<List<Receipt>> getReceiptsByBalanceId(Integer balanceId){
         return receiptRepository.getReceiptsByBalanceId(balanceId);
     }
 

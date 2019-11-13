@@ -35,7 +35,9 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceR
         }
     }
 
-    public BalanceAdapter(List<Receipt> receiptList) {
+    public BalanceAdapter() {}
+
+    public void setReceipts(List<Receipt> receiptList) {
         receipts = receiptList;
     }
 
