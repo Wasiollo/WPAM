@@ -3,7 +3,6 @@ package com.wasiollo.neverexpense;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -78,6 +77,25 @@ public class MainActivity extends AppCompatActivity {
 
     private List<Receipt> getData() {
         List<Receipt> receipts = new ArrayList<>();
+
+        Receipt receipt1 = new Receipt();
+        receipt1.setCompany("Biedronka");
+        receipt1.setCost(123.44);
+        receipt1.setDateTime(new Date());
+        receipt1.setId(1);
+        receipt1.setUserId(1);
+        receipt1.setBalanceId(1);
+
+        Receipt receipt2 = new Receipt();
+        receipt2.setCompany("Stonka");
+        receipt2.setCost(166.44);
+        receipt2.setDateTime(new Date());
+        receipt2.setId(2);
+        receipt2.setUserId(1);
+        receipt2.setBalanceId(1);
+
+        receipts.add(receipt1);
+        receipts.add(receipt2);
         return receipts;
     }
 }

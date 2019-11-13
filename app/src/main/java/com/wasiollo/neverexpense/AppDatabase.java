@@ -15,16 +15,19 @@ import com.wasiollo.neverexpense.product.domain.Product;
 import com.wasiollo.neverexpense.receipt.dao.ReceiptDao;
 import com.wasiollo.neverexpense.receipt.domain.Receipt;
 import com.wasiollo.neverexpense.user.domain.User;
+import com.wasiollo.neverexpense.user.domain.UserBalanceJoin;
 
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {User.class, Balance.class, Receipt.class, Product.class}, version = 1)
+@Database(entities = {User.class, Balance.class, Receipt.class, Product.class, UserBalanceJoin.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract ReceiptDao receiptDao();
+
     public abstract ProductDao productDao();
+
     public abstract BalanceDao balanceDao();
 
     private static volatile AppDatabase INSTANCE;

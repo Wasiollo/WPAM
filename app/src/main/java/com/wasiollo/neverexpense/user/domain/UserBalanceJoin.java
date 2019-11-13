@@ -1,9 +1,9 @@
 package com.wasiollo.neverexpense.user.domain;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
-import androidx.room.PrimaryKey;
 
 import com.wasiollo.neverexpense.balance.domain.Balance;
 
@@ -11,7 +11,7 @@ import lombok.Data;
 
 @Data
 @Entity(tableName = "user_balance_join",
-        primaryKeys = { "user_id", "balance_id" },
+        primaryKeys = {"user_id", "balance_id"},
         foreignKeys = {
                 @ForeignKey(entity = User.class,
                         parentColumns = "id",
@@ -21,12 +21,11 @@ import lombok.Data;
                         childColumns = "balance_id")
         })
 public class UserBalanceJoin {
-    @PrimaryKey(autoGenerate = true)
-    private Integer id;
-
     @ColumnInfo(name = "user_id")
+    @NonNull
     private Integer userId;
 
-    @ColumnInfo(name = "balnce_id")
+    @NonNull
+    @ColumnInfo(name = "balance_id")
     private Integer balanceId;
 }
