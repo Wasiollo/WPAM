@@ -7,8 +7,6 @@ import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,11 +14,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.wasiollo.neverexpense.balance.adapter.BalanceAdapter;
 import com.wasiollo.neverexpense.balance.view_model.BalanceViewModel;
-import com.wasiollo.neverexpense.receipt.domain.Receipt;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private BalanceViewModel balanceViewModel;
@@ -40,9 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.balanceRecyclerView);
 
-        balanceAdapter = new BalanceAdapter();
-
-        recyclerView.setAdapter(balanceAdapter);
+        recyclerView.setAdapter(new BalanceAdapter(receipt -> Snackbar.make(recyclerView, "Replace with your own action " + receipt.getId(), Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()));
 
         balanceViewModel = ViewModelProviders.of(this).get(BalanceViewModel.class);
 

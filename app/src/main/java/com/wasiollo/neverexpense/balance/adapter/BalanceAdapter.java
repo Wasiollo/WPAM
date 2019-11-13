@@ -16,7 +16,13 @@ import java.util.Date;
 import java.util.List;
 
 public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceRecyclerViewItemHolder> {
+
+    public interface OnItemClickListener {
+        void onItemClick(Receipt receipt);
+    }
+
     private List<Receipt> receipts;
+    private final OnItemClickListener listener;
 
     public static class BalanceRecyclerViewItemHolder extends RecyclerView.ViewHolder {
 
@@ -25,17 +31,30 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceR
         public TextView date;
         public TextView time;
 
-        public BalanceRecyclerViewItemHolder(View v) {
-            super(v);
+        public BalanceRecyclerViewItemHolder(View itemView) {
+            super(itemView);
 
-            cost = v.findViewById(R.id.cost);
-            firm = v.findViewById(R.id.firm);
-            date = v.findViewById(R.id.date);
-            time = v.findViewById(R.id.time);
+            cost = itemView.findViewById(R.id.cost);
+            firm = itemView.findViewById(R.id.firm);
+            date = itemView.findViewById(R.id.date);
+            time = itemView.findViewById(R.id.time);
+        }
+
+        public void bind(final Receipt item, final OnItemClickListener listener){
+            cost.setText(item.getCost().toString());
+            firm.setText(item.getCompany());
+            Date reciptDate = item.getDateTime();
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+            DateFormat timeFormat = new SimpleDateFormat("hh:mm");
+            date.setText(dateFormat.format(reciptDate));
+            time.setText(timeFormat.format(reciptDate));
+            itemView.setOnClickListener(v -> listener.onItemClick(item));
         }
     }
 
-    public BalanceAdapter() {}
+    public BalanceAdapter(OnItemClickListener listener) {
+        this.listener = listener;
+    }
 
     public void setReceipts(List<Receipt> receiptList) {
         receipts = receiptList;
@@ -53,13 +72,8 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceR
 
     @Override
     public void onBindViewHolder(BalanceRecyclerViewItemHolder holder, int position) {
-        holder.cost.setText(receipts.get(position).getCost().toString());
-        holder.firm.setText(receipts.get(position).getCompany().toString());
-        Date reciptDate = receipts.get(position).getDateTime();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
-        DateFormat timeFormat = new SimpleDateFormat("hh:mm");
-        holder.date.setText(dateFormat.format(reciptDate));
-        holder.time.setText(timeFormat.format(reciptDate));
+        holder.bind(receipts.get(position), listener);
+
     }
 
     @Override
