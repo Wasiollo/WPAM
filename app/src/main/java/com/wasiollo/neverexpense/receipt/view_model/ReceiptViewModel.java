@@ -26,15 +26,15 @@ public class ReceiptViewModel extends AndroidViewModel {
         productRepository = new ProductRepository(application);
     }
 
-    LiveData<List<Receipt>> getReceiptsByBalanceId(Integer balanceId) {
+    public LiveData<List<Receipt>> getReceiptsByBalanceId(Integer balanceId) {
         return receiptRepository.getReceiptsByBalanceId(balanceId);
     }
 
-    LiveData<Receipt> getReceiptById(Integer receiptId) {
+    public LiveData<Receipt> getReceiptById(Integer receiptId) {
         return receiptRepository.getReceiptById(receiptId);
     }
 
-    LiveData<List<Product>> getProductsByReceiptId(Integer receiptId) {
+    public LiveData<List<Product>> getProductsByReceiptId(Integer receiptId) {
         return productRepository.getProductsByReceiptId(receiptId);
     }
 

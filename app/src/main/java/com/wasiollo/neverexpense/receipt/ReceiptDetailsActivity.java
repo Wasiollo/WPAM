@@ -1,46 +1,52 @@
 package com.wasiollo.neverexpense.receipt;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.wasiollo.neverexpense.R;
-import com.wasiollo.neverexpense.product.domain.Product;
 import com.wasiollo.neverexpense.receipt.adapter.ReceiptAdapter;
 import com.wasiollo.neverexpense.receipt.domain.Receipt;
+import com.wasiollo.neverexpense.receipt.view_model.ReceiptViewModel;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class ReceiptDetailsActivity extends Activity {
+public class ReceiptDetailsActivity extends AppCompatActivity {
+    private ReceiptViewModel receiptViewModel;
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter receiptAdapter;
+    private ReceiptAdapter receiptAdapter;
+    private Receipt receipt;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.receipt_activity);
 
-//        TODO get data
-        Receipt receipt = new Receipt();
-        List<Product> products = new ArrayList<>();
+        attachAdapterToRecyclerView();
 
-        buildHeader(receipt.getCost());
-        attachAdapterToRecyclerView(products);
+        Intent intent = getIntent();
+        Integer receiptId = intent.getIntExtra("receiptId", 0);
+
+        receiptViewModel = ViewModelProviders.of(this).get(ReceiptViewModel.class);
+
+        receiptViewModel.getReceiptById(receiptId).observe(this, receipt -> this.receipt = receipt);
+        receiptViewModel.getProductsByReceiptId(receiptId).observe(this, products -> receiptAdapter.setProducts(products));
+
+        buildHeader();
     }
 
-    private void buildHeader(Double price) {
+    private void buildHeader() {
         ConstraintLayout header = findViewById(R.id.receiptHeader);
         TextView cost = header.findViewById(R.id.cost);
-        cost.setText(price.toString());
+        cost.setText(receipt.getCost().toString());
     }
 
-    private void attachAdapterToRecyclerView(List<Product> products) {
+    private void attachAdapterToRecyclerView() {
         recyclerView = findViewById(R.id.receiptRecyclerView);
-        receiptAdapter = new ReceiptAdapter(products);
+        receiptAdapter = new ReceiptAdapter();
         recyclerView.setAdapter(receiptAdapter);
     }
 }

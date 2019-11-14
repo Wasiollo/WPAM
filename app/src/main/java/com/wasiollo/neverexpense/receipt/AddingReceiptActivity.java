@@ -1,20 +1,19 @@
 package com.wasiollo.neverexpense.receipt;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.wasiollo.neverexpense.R;
 import com.wasiollo.neverexpense.product.domain.Product;
-import com.wasiollo.neverexpense.receipt.adapter.ReceiptAdapter;
 import com.wasiollo.neverexpense.receipt.domain.Receipt;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddingReceiptActivity extends Activity {
+public class AddingReceiptActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

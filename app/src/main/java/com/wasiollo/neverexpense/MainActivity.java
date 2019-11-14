@@ -1,5 +1,6 @@
 package com.wasiollo.neverexpense;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +15,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.wasiollo.neverexpense.balance.adapter.BalanceAdapter;
 import com.wasiollo.neverexpense.balance.view_model.BalanceViewModel;
+import com.wasiollo.neverexpense.receipt.ReceiptDetailsActivity;
 
 public class MainActivity extends AppCompatActivity {
     private BalanceViewModel balanceViewModel;
@@ -31,16 +33,25 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Integer balanceId = 1; //TODO get balance
+
         recyclerView = findViewById(R.id.balanceRecyclerView);
 
-        recyclerView.setAdapter(new BalanceAdapter(receipt -> Snackbar.make(recyclerView, "Replace with your own action " + receipt.getId(), Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()));
+        balanceAdapter = new BalanceAdapter(receipt -> {
+            /*Snackbar.make(recyclerView, "Replace with your own action " + receipt.getId(), Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();*/
+            Intent receiptDetailsIntent = new Intent(MainActivity.this, ReceiptDetailsActivity.class);
+            Bundle receiptDetailsExtras = new Bundle();
+            receiptDetailsExtras.putInt("receiptId", receipt.getId());
+            receiptDetailsIntent.putExtras(receiptDetailsExtras);
+            startActivity(receiptDetailsIntent);
+        });
+
+        recyclerView.setAdapter(balanceAdapter);
 
         balanceViewModel = ViewModelProviders.of(this).get(BalanceViewModel.class);
 
-        Integer balanceId = 1; //TODO get balance
-
-        balanceViewModel.getReceiptsByBalanceId(balanceId).observe(this, receipts1 -> balanceAdapter.setReceipts(receipts1));
+        balanceViewModel.getReceiptsByBalanceId(balanceId).observe(this, receipts -> balanceAdapter.setReceipts(receipts));
 
         FloatingActionButton fab = findViewById(R.id.addReceiptButton);
         fab.setOnClickListener(view -> {

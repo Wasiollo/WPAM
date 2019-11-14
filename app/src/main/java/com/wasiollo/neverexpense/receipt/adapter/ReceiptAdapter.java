@@ -28,8 +28,7 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ReceiptR
         }
     }
 
-    public ReceiptAdapter(List<Product> productList) {
-        this.setProducts(productList);
+    public ReceiptAdapter() {
     }
 
     public void setProducts(List<Product> products) {
