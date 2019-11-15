@@ -38,8 +38,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.balanceRecyclerView);
 
         balanceAdapter = new BalanceAdapter(receipt -> {
-            /*Snackbar.make(recyclerView, "Replace with your own action " + receipt.getId(), Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();*/
             Intent receiptDetailsIntent = new Intent(MainActivity.this, ReceiptDetailsActivity.class);
             Bundle receiptDetailsExtras = new Bundle();
             receiptDetailsExtras.putInt("receiptId", receipt.getId());
