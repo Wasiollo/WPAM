@@ -25,7 +25,7 @@ public class AddingReceiptActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.receipt_activity);
+        setContentView(R.layout.adding_activity);
 
         //        TODO get data from camera
 
@@ -59,8 +59,8 @@ public class AddingReceiptActivity extends AppCompatActivity {
 
     public void onDelete(View v) {
         parentLinearLayout.removeView((View) v.getParent());
-        Snackbar.make((View) ((View) v.getParent()).getParent(), "Removed line", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
+        /*Snackbar.make((View) v.getParent(), "Removed line", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();*/
     }
 
     public void onSave(View view) {
