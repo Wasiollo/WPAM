@@ -67,7 +67,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
                 Receipt receipt1 = new Receipt();
                 receipt1.setCompany("Biedronka");
-                receipt1.setCost(123.44);
+                receipt1.setCost(6.45);
                 receipt1.setDateTime(new Date());
                 receipt1.setId(1);
                 receipt1.setUserId(1);
@@ -75,7 +75,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
                 Receipt receipt2 = new Receipt();
                 receipt2.setCompany("Lidl");
-                receipt2.setCost(166.44);
+                receipt2.setCost(7.94);
                 receipt2.setDateTime(new Date());
                 receipt2.setId(2);
                 receipt2.setUserId(1);
@@ -86,26 +86,26 @@ public abstract class AppDatabase extends RoomDatabase {
 
                 Product product1 = new Product();
                 product1.setId(1);
-                product1.setName("a");
-                product1.setPrice(1.00);
+                product1.setName("Kajzerka");
+                product1.setPrice(3.46);
                 product1.setReceiptId(1);
 
                 Product product2 = new Product();
                 product2.setId(2);
-                product2.setName("b");
-                product2.setPrice(2.00);
+                product2.setName("Mleko");
+                product2.setPrice(2.99);
                 product2.setReceiptId(1);
 
                 Product product3 = new Product();
                 product3.setId(3);
-                product3.setName("c");
-                product3.setPrice(3.00);
+                product3.setName("Czosnek");
+                product3.setPrice(3.45);
                 product3.setReceiptId(2);
 
                 Product product4 = new Product();
                 product4.setId(4);
-                product4.setName("d");
-                product4.setPrice(4.00);
+                product4.setName("Cebula");
+                product4.setPrice(4.49);
                 product4.setReceiptId(2);
 
                 productDao.insert(product1);

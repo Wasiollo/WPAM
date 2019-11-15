@@ -12,9 +12,9 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.wasiollo.neverexpense.balance.adapter.BalanceAdapter;
 import com.wasiollo.neverexpense.balance.view_model.BalanceViewModel;
+import com.wasiollo.neverexpense.receipt.AddingReceiptActivity;
 import com.wasiollo.neverexpense.receipt.ReceiptDetailsActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -53,10 +53,14 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton fab = findViewById(R.id.addReceiptButton);
         fab.setOnClickListener(view -> {
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+            /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
-            System.out.println("elo");
-            balanceViewModel.getReceiptsByBalanceId(balanceId).observe(this, receipts -> balanceAdapter.setReceipts(receipts));
+            balanceViewModel.getReceiptsByBalanceId(balanceId).observe(this, receipts -> balanceAdapter.setReceipts(receipts));*/
+            Intent addingReceiptIntent = new Intent(MainActivity.this, AddingReceiptActivity.class);
+            Bundle addingReceiptExtras = new Bundle();
+            addingReceiptExtras.putInt("balanceId", balanceId);
+            addingReceiptIntent.putExtras(addingReceiptExtras);
+            startActivity(addingReceiptIntent);
         });
     }
 
