@@ -2,7 +2,6 @@ package com.wasiollo.neverexpense.receipt;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +10,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.wasiollo.neverexpense.MainActivity;
 import com.wasiollo.neverexpense.R;
 import com.wasiollo.neverexpense.receipt.adapter.ReceiptAdapter;
 import com.wasiollo.neverexpense.receipt.view_model.ReceiptViewModel;
@@ -24,12 +22,13 @@ public class ReceiptDetailsActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
         setContentView(R.layout.receipt_activity);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if (getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
@@ -54,13 +53,6 @@ public class ReceiptDetailsActivity extends AppCompatActivity {
             cost.setText(String.valueOf(totalCost));
         }
     }
-
-/*    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivityForResult(myIntent, 0);
-        return true;
-    }*/
 
     @Override
     public boolean onSupportNavigateUp() {

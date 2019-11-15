@@ -1,10 +1,8 @@
 package com.wasiollo.neverexpense.receipt;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -13,7 +11,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.wasiollo.neverexpense.MainActivity;
 import com.wasiollo.neverexpense.R;
 import com.wasiollo.neverexpense.receipt.view_model.ReceiptViewModel;
 
@@ -25,6 +22,7 @@ public class AddingReceiptActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
         setContentView(R.layout.adding_activity);
 
         //        TODO get data from camera
@@ -32,7 +30,7 @@ public class AddingReceiptActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if (getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
@@ -42,14 +40,6 @@ public class AddingReceiptActivity extends AppCompatActivity {
         parentLinearLayout = findViewById(R.id.parent_linear_layout);
 
     }
-
-/*    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivityForResult(myIntent, 0);
-        return true;
-    }*/
-
 
     @Override
     public boolean onSupportNavigateUp() {
