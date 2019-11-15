@@ -25,28 +25,25 @@ public class ReceiptDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.receipt_activity);
 
-        attachAdapterToRecyclerView();
-
         Intent intent = getIntent();
         Integer receiptId = intent.getIntExtra("receiptId", 0);
+
+        recyclerView = findViewById(R.id.receiptRecyclerView);
+        receiptAdapter = new ReceiptAdapter();
+        recyclerView.setAdapter(receiptAdapter);
 
         receiptViewModel = ViewModelProviders.of(this).get(ReceiptViewModel.class);
 
         receiptViewModel.getReceiptById(receiptId).observe(this, receipt -> this.receipt = receipt);
         receiptViewModel.getProductsByReceiptId(receiptId).observe(this, products -> receiptAdapter.setProducts(products));
 
-        buildHeader();
+//        buildHeader();
     }
 
     private void buildHeader() {
         ConstraintLayout header = findViewById(R.id.receiptHeader);
         TextView cost = header.findViewById(R.id.cost);
-        cost.setText(receipt.getCost().toString());
-    }
 
-    private void attachAdapterToRecyclerView() {
-        recyclerView = findViewById(R.id.receiptRecyclerView);
-        receiptAdapter = new ReceiptAdapter();
-        recyclerView.setAdapter(receiptAdapter);
+        cost.setText(String.format("%d", receipt.getCost()));
     }
 }

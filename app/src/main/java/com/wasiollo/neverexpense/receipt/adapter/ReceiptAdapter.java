@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.wasiollo.neverexpense.R;
 import com.wasiollo.neverexpense.product.domain.Product;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ReceiptRecyclerViewItemHolder> {
@@ -29,6 +30,7 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ReceiptR
     }
 
     public ReceiptAdapter() {
+        products = new ArrayList<>();
     }
 
     public void setProducts(List<Product> products) {

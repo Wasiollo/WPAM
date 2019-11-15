@@ -84,5 +84,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/sumLabel"
         app:layout_constraintVertical_weight="14"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/adding_recycler_view_item" />
 </androidx.constraintlayout.widget.ConstraintLayout>
