@@ -2,6 +2,7 @@ package com.wasiollo.neverexpense.receipt;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.wasiollo.neverexpense.MainActivity;
 import com.wasiollo.neverexpense.R;
 import com.wasiollo.neverexpense.receipt.adapter.ReceiptAdapter;
 import com.wasiollo.neverexpense.receipt.view_model.ReceiptViewModel;
@@ -51,5 +53,12 @@ public class ReceiptDetailsActivity extends AppCompatActivity {
         if (cost != null) {
             cost.setText(String.valueOf(totalCost));
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivityForResult(myIntent, 0);
+        return true;
     }
 }

@@ -26,7 +26,7 @@
         app:layout_constraintEnd_toStartOf="@id/cost"
         app:layout_constraintHorizontal_weight="4"
 
-        tools:text="Suma" />
+        tools:text="@string/sumLabel" />
 
     <TextView
         android:id="@+id/cost"
