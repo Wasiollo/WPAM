@@ -16,14 +16,18 @@ import java.util.List;
 public abstract class ReceiptDao {
 
     @Insert
-    public abstract void insert(Receipt receipt);
+    public abstract long insert(Receipt receipt);
 
     @Insert
     protected abstract void insert(List<Product> products);
 
     @Transaction
     public void insert(ReceiptWithProducts receiptWithProducts) {
-        insert(receiptWithProducts.getReceipt());
+        int receiptId = (int) insert(receiptWithProducts.getReceipt());
+        List<Product> products = receiptWithProducts.getProducts();
+        for(Product product : products){
+            product.setReceiptId(receiptId);
+        }
         insert(receiptWithProducts.getProducts());
     }
 

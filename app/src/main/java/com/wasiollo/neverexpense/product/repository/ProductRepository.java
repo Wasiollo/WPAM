@@ -29,4 +29,14 @@ public class ProductRepository {
             productDao.insert(product);
         });
     }
+
+    public void insert(List<Product> products) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            productDao.insert(products);
+        });
+    }
+
+    public LiveData<List<Product>> getAll() {
+        return productDao.getAll();
+    }
 }

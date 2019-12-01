@@ -42,7 +42,15 @@ public class ReceiptViewModel extends AndroidViewModel {
         receiptRepository.insert(receipt);
     }
 
+    public void insert(List<Product> products){
+        productRepository.insert(products);
+    }
+
     public void insert(ReceiptWithProducts receiptWithProducts) {
         receiptRepository.insert(receiptWithProducts);
+    }
+
+    public LiveData<List<Product>> getAll(){
+        return productRepository.getAll();
     }
 }

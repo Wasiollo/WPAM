@@ -46,4 +46,8 @@ public class ReceiptRepository {
 
         //TODO http-request to backend instance (only Receipt)
     }
+
+    public LiveData<List<Receipt>> getAll(){
+        return receiptDao.getAllReceipts();
+    }
 }

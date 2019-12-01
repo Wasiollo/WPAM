@@ -11,29 +11,28 @@
     <Button
         android:id="@+id/save_button"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="40dp"
         android:layout_marginStart="0dp"
 
         android:layout_marginTop="0dp"
         android:layout_marginEnd="0dp"
         android:layout_marginBottom="0dp"
         android:background="@color/lightBackgroundColor"
+        android:onClick="onSave"
         android:text="@string/button_save"
-        android:textColor="@color/addButtonColor"
 
+        android:textColor="@color/addButtonColor"
         app:layout_constraintBottom_toTopOf="@id/sumLabel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_weight="1"
-        android:onClick="onSave"
-        />
+        app:layout_constraintVertical_weight="1" />
 
     <TextView
         android:id="@+id/sumLabel"
 
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="50dp"
         android:layout_marginStart="0dp"
         android:layout_marginTop="0dp"
         android:layout_marginEnd="0dp"
@@ -42,7 +41,7 @@
         android:gravity="center"
         android:text="@string/sumLabel"
         android:textSize="28sp"
-        app:layout_constraintBottom_toTopOf="@id/parent_linear_layout"
+        app:layout_constraintBottom_toTopOf="@id/scrollView"
         app:layout_constraintEnd_toStartOf="@id/sum"
         app:layout_constraintHorizontal_weight="2"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,7 +52,7 @@
         android:id="@+id/sum"
 
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="50dp"
         android:layout_marginStart="0dp"
         android:layout_marginTop="0dp"
         android:layout_marginEnd="0dp"
@@ -62,7 +61,7 @@
         android:hint="@string/hint_word"
         android:inputType="textAutoComplete"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@id/parent_linear_layout"
+        app:layout_constraintBottom_toTopOf="@id/scrollView"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="3"
@@ -72,8 +71,9 @@
 
         />
 
-    <LinearLayout
-        android:id="@+id/parent_linear_layout"
+    <ScrollView
+        android:id="@+id/scrollView"
+
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="0dp"
@@ -87,49 +87,56 @@
         app:layout_constraintTop_toBottomOf="@id/sumLabel"
         app:layout_constraintVertical_weight="12">
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/item_name"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="5"
-                android:inputType="text" />
-
-            <EditText
-                android:id="@+id/item_price"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="3"
-                android:gravity="end"
-                android:inputType="number" />
-
-            <Button
-                android:id="@+id/delete_button"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:background="@android:drawable/ic_delete"
-                android:onClick="onDelete" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/add_field_button"
+        <LinearLayout
+            android:id="@+id/parent_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="#555"
-            android:onClick="onAddField"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:text="@string/add_field"
-            android:textColor="#FFF" />
-    </LinearLayout>
+            android:orientation="vertical">
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/item_name"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:inputType="text" />
+
+                <EditText
+                    android:id="@+id/item_price"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="end"
+                    android:inputType="number" />
+
+                <Button
+                    android:id="@+id/delete_button"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@android:drawable/ic_delete"
+                    android:onClick="onDelete" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/add_field_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="#555"
+                android:onClick="onAddField"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="@string/add_field"
+                android:textColor="#FFF" />
+        </LinearLayout>
+    </ScrollView>♂
 
 </androidx.constraintlayout.widget.ConstraintLayout>
