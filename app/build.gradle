@@ -26,6 +26,15 @@ android {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'x86', 'armeabi-v7a'
+            universalApk true
+        }
+    }
 }
 
 dependencies {
@@ -47,5 +56,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
-    implementation 'com.rmtheis:tess-two:5.4.1'
+    api 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
+    implementation("com.squareup.okhttp3:okhttp:4.2.1")
+    implementation 'com.google.code.gson:gson:2.8.6'
 }

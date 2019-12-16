@@ -1,12 +1,23 @@
 package com.wasiollo.neverexpense.receipt;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicConvolve3x3;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -18,28 +29,34 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.googlecode.tesseract.android.TessBaseAPI;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 import com.wasiollo.neverexpense.R;
 import com.wasiollo.neverexpense.product.domain.Product;
 import com.wasiollo.neverexpense.receipt.domain.Receipt;
 import com.wasiollo.neverexpense.receipt.domain.ReceiptWithProducts;
 import com.wasiollo.neverexpense.receipt.view_model.ReceiptViewModel;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class AddingReceiptActivity extends AppCompatActivity {
 
     private static final int CAMERA_REQUEST = 1888;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
-    public static final String TESS_DATA = "/tessdata";
+    private static final long MAX_IMAGE_SIZE = 1024 * 1024;
 
-    private TessBaseAPI tessBaseAPI;
     private LinearLayout parentLinearLayout;
     private ReceiptViewModel receiptViewModel;
 
@@ -52,8 +69,7 @@ public class AddingReceiptActivity extends AppCompatActivity {
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
         } else {
-            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            takeImageAndCrop();
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -76,8 +92,7 @@ public class AddingReceiptActivity extends AppCompatActivity {
         if (requestCode == MY_CAMERA_PERMISSION_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                takeImageAndCrop();
             } else {
                 Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
             }
@@ -86,63 +101,149 @@ public class AddingReceiptActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            prepareTessData();
-            doOCR(photo);
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Uri imageUri = result.getUri();
+                handleCroppedImage(imageUri);
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+                Toast.makeText(this, "Error occurred during taking and cropping photo" + error.getMessage(), Toast.LENGTH_LONG).show();
+            }
         }
     }
 
-    private void prepareTessData() {
+    private void handleCroppedImage(Uri imageUri) {
         try {
-            File dir = getExternalFilesDir(TESS_DATA);
-            if (!dir.exists()) {
-                if (!dir.mkdir()) {
-                    Toast.makeText(getApplicationContext(), "The folder " + dir.getPath() + "was not created", Toast.LENGTH_SHORT).show();
-                }
-            }
-            String[] fileList = getAssets().list("");
-            if (fileList != null) {
-                for (String fileName : fileList) {
-                    if(fileName.endsWith(".traineddata")) {
-                        String pathToDataFile = dir + "/" + fileName;
-                        if (!(new File(pathToDataFile)).exists()) {
-                            InputStream in = getAssets().open(fileName);
-                            OutputStream out = new FileOutputStream(pathToDataFile);
-                            byte[] buff = new byte[1024];
-                            int len;
-                            while ((len = in.read(buff)) > 0) {
-                                out.write(buff, 0, len);
-                            }
-                            in.close();
-                            out.close();
-                        }
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+            Bitmap monochromedBitmap = monochromeBitmap(bitmap);
+//            Bitmap sharpenedBitmap = sharpenBitmap(monochromedBitmap);
+            doHttpOCR(monochromedBitmap);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void takeImageAndCrop() {
+        CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .start(this);
+    }
+
+    private String doHttpOCR(Bitmap sharpenedBitmap) {
+        String base64Image = convertBitmapToBase64String(sharpenedBitmap);
+        return executeApi(base64Image);
+    }
+
+    private String executeApi(String base64Image) {
+
+        final OkHttpClient client = new OkHttpClient();
+        final RequestBody formBody = new FormBody.Builder()
+                .add("language", "pol")
+                .add("base64Image", base64Image)
+                .build();
+        final Request request = new Request.Builder()
+                .url("https://api.ocr.space/parse/image")
+                .addHeader("apikey", "447f7de7e188957")
+                .post(formBody)
+                .build();
+
+        AsyncTask<Void, Void, String> asyncTask = new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                try {
+                    Response response = client.newCall(request).execute();
+                    if (!response.isSuccessful()) {
+                        return null;
                     }
+                    return response.body().string();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+            @Override
+            protected void onPostExecute(String apiResult) {
+                super.onPostExecute(apiResult);
+                if (apiResult != null) {
+                    handleApiResult(apiResult);
+                }
+            }
+        };
+        asyncTask.execute();
+
+        return "";
     }
 
-    private String doOCR(final Bitmap bitmap) {
-        try {
-            tessBaseAPI = new TessBaseAPI();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        String dataPath = getExternalFilesDir("/").getPath() + "/";
-        tessBaseAPI.init(dataPath, "pol");
-        tessBaseAPI.setImage(bitmap);
-        String retStr = "No result";
-        try {
-            retStr = tessBaseAPI.getUTF8Text();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        tessBaseAPI.end();
-        Toast.makeText(this, "ocr text : "+retStr, Toast.LENGTH_LONG).show();
-        return retStr;
+    private void handleApiResult(String apiResult){
+        Gson gson = new Gson();
+        JsonObject apiResponse = gson.fromJson(apiResult, JsonObject.class);
+        String ocrResult = apiResponse.getAsJsonArray("ParsedResults").get(0).getAsJsonObject().get("ParsedText").getAsString();
+
+        EditText totalCostField = findViewById(R.id.sum);
+        Toast.makeText(this, "ocr text : " + ocrResult, Toast.LENGTH_LONG).show();
+        totalCostField.setText(ocrResult);
+    }
+
+    public static String convertBitmapToBase64String(Bitmap bitmap) {
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        int currSize;
+        int currQuality = 55;
+
+//        do {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, currQuality, stream);
+            currSize = stream.toByteArray().length;
+            // limit quality by 5 percent every time
+            currQuality -= 5;
+
+//        } while (currSize >= MAX_IMAGE_SIZE);
+
+        String encodedString = Base64.encodeToString(stream.toByteArray(), Base64.DEFAULT);
+
+        return "data:image/jpeg;base64," + encodedString;
+    }
+
+    private Bitmap monochromeBitmap(Bitmap bmpSource) {
+        Bitmap bmpMonochrome = Bitmap.createBitmap(bmpSource.getWidth(), bmpSource.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bmpMonochrome);
+        ColorMatrix ma = new ColorMatrix();
+        ma.setSaturation(0);
+        Paint paint = new Paint();
+        paint.setColorFilter(new ColorMatrixColorFilter(ma));
+        canvas.drawBitmap(bmpSource, 0, 0, paint);
+        return bmpMonochrome;
+    }
+
+    private Bitmap sharpenBitmap(Bitmap originalBitmap) {
+        float[] matrix_sharpen =
+                {0, -1, 0,
+                        -1, 5, -1,
+                        0, -1, 0};
+        return createBitmap_convolve(originalBitmap, matrix_sharpen);
+
+    }
+
+    private Bitmap createBitmap_convolve(Bitmap src, float[] coefficients) {
+
+        Bitmap result = Bitmap.createBitmap(src.getWidth(),
+                src.getHeight(), src.getConfig());
+
+        RenderScript renderScript = RenderScript.create(this);
+
+        Allocation input = Allocation.createFromBitmap(renderScript, src);
+        Allocation output = Allocation.createFromBitmap(renderScript, result);
+
+        ScriptIntrinsicConvolve3x3 convolution = ScriptIntrinsicConvolve3x3
+                .create(renderScript, Element.U8_4(renderScript));
+        convolution.setInput(input);
+        convolution.setCoefficients(coefficients);
+        convolution.forEach(output);
+
+        output.copyTo(result);
+        renderScript.destroy();
+        return result;
     }
 
     @Override
