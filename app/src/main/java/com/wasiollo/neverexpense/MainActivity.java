@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.wasiollo.neverexpense.balance.adapter.BalanceAdapter;
 import com.wasiollo.neverexpense.balance.view_model.BalanceViewModel;
 import com.wasiollo.neverexpense.receipt.AddingReceiptActivity;
@@ -40,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
             receiptDetailsExtras.putInt("receiptId", receipt.getId());
             receiptDetailsIntent.putExtras(receiptDetailsExtras);
             startActivity(receiptDetailsIntent);
+        }, receipt -> {
+            Toast.makeText(this, "Receipt cost : " + receipt.getCost(), Toast.LENGTH_LONG).show();
+            return true;
         });
 
         recyclerView.setAdapter(balanceAdapter);

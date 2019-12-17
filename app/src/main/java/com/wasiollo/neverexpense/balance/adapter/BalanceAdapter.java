@@ -1,6 +1,9 @@
 package com.wasiollo.neverexpense.balance.adapter;
 
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -20,10 +23,16 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceR
 
     public interface OnItemClickListener {
         void onItemClick(Receipt receipt);
+
+    }
+
+    public interface OnLongClickListener {
+        boolean onItemLongClick(Receipt receipt);
     }
 
     private List<Receipt> receipts;
     private final OnItemClickListener listener;
+    private final OnLongClickListener longClickListener;
 
     public static class BalanceRecyclerViewItemHolder extends RecyclerView.ViewHolder {
 
@@ -41,7 +50,7 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceR
             time = itemView.findViewById(R.id.time);
         }
 
-        public void bind(final Receipt item, final OnItemClickListener listener){
+        public void bind(final Receipt item, final OnItemClickListener listener, OnLongClickListener longClickListener){
             cost.setText(item.getCost().toString());
             firm.setText(item.getCompany());
             Date reciptDate = item.getDateTime();
@@ -49,13 +58,16 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceR
             DateFormat timeFormat = new SimpleDateFormat("hh:mm");
             date.setText(dateFormat.format(reciptDate));
             time.setText(timeFormat.format(reciptDate));
+
             itemView.setOnClickListener(v -> listener.onItemClick(item));
+            itemView.setOnLongClickListener(v -> longClickListener.onItemLongClick(item));
         }
     }
 
-    public BalanceAdapter(OnItemClickListener listener) {
+    public BalanceAdapter(OnItemClickListener listener, OnLongClickListener longClickListener) {
         receipts = new ArrayList<>();
         this.listener = listener;
+        this.longClickListener = longClickListener;
     }
 
     public void setReceipts(List<Receipt> receiptList) {
@@ -74,7 +86,7 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceR
 
     @Override
     public void onBindViewHolder(BalanceRecyclerViewItemHolder holder, int position) {
-        holder.bind(receipts.get(position), listener);
+        holder.bind(receipts.get(position), listener, longClickListener);
 
     }
 

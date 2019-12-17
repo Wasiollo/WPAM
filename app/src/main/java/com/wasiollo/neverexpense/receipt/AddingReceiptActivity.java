@@ -184,14 +184,16 @@ public class AddingReceiptActivity extends AppCompatActivity {
         ParsedOcrResult parsedOcrResult = parseOcrResult(ocrResult);
 
         EditText companyNameField = findViewById(R.id.companyName);
-//        Toast.makeText(this, "ocr text : " + parsedOcrResult.getCompanyName(), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "ocr parsed size : " + parsedOcrResult.getProducts().size(), Toast.LENGTH_LONG).show();
 //        companyNameField.setText(parsedOcrResult.getCompanyName());
+        StringBuilder x = new StringBuilder(companyNameField.getText().toString());
 
         for (int i = 1; i < parsedOcrResult.getProducts().size(); ++i) {
-            companyNameField.setText(companyNameField.getText().toString() + " ! " + parsedOcrResult.getProducts().get(i-1));
+            x.append(" ! ").append(parsedOcrResult.getProducts().get(i - 1));
 
             onAddField(parentLinearLayout);
         }
+        companyNameField.setText( x.toString());
         final int childCount = parentLinearLayout.getChildCount();
         List<String> products = parsedOcrResult.getProducts();
         for (int i = 0; i < childCount - 1; ++i) { //last one is add field button
