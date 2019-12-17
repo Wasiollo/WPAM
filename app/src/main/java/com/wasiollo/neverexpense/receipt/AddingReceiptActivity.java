@@ -191,7 +191,10 @@ public class AddingReceiptActivity extends AppCompatActivity {
         for (int i = 1; i < parsedOcrResult.getProducts().size(); ++i) {
 //            x.append(" ! ").append(parsedOcrResult.getProducts().get(i - 1));
 
-            onAddField(parentLinearLayout);
+            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            final View rowView = inflater.inflate(R.layout.adding_field, null);
+            // Add the new row before the add field button.
+            parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - 1);
         }
 //        companyNameField.setText( x.toString());
         final int childCount = parentLinearLayout.getChildCount();

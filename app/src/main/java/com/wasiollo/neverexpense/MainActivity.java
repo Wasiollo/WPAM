@@ -6,10 +6,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,7 +43,10 @@ public class MainActivity extends AppCompatActivity {
             receiptDetailsIntent.putExtras(receiptDetailsExtras);
             startActivity(receiptDetailsIntent);
         }, receipt -> {
-            View.OnClickListener onClickListener = v -> balanceViewModel.deleteReceipt(receipt.getId());
+            View.OnClickListener onClickListener = v -> {
+                balanceViewModel.deleteReceipt(receipt.getId());
+                balanceAdapter.notifyDataSetChanged();
+            };
             Snackbar.make(this.findViewById(android.R.id.content), "Deleting receipt", Snackbar.LENGTH_LONG)
                     .setAction("Delete", onClickListener)
                     .setActionTextColor(Color.RED)
