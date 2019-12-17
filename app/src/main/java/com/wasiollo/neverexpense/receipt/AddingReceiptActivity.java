@@ -208,8 +208,7 @@ public class AddingReceiptActivity extends AppCompatActivity {
 
     private ParsedOcrResult parseOcrResult(String ocrResult) {
         EditText companyNameField = findViewById(R.id.companyName);
-        companyNameField.setText(ocrResult);
-        Toast.makeText(this, "Ocr result: " + ocrResult, Toast.LENGTH_LONG).show();
+
         ParsedOcrResult parsedOcrResult = new ParsedOcrResult();
         List<String> productList = new ArrayList<>();
         String[] splittedByBillLabel = ocrResult.split("Paragon");
@@ -218,12 +217,16 @@ public class AddingReceiptActivity extends AppCompatActivity {
             companyName = "";
         }
 
-        String[] partiallyCut = ocrResult.replaceAll("([0-9]+,[0-9]{2})(?!\\s|$)", "|$1/").split("/");
+        String replacedString = ocrResult.replaceAll("([0-9]+,[0-9]{2})(?!\\s|$)", "|$1/");
+        String[] partiallyCut = replacedString.split("/");
         if (!companyName.equals("")) {
             String productsString = splittedByBillLabel[1].split("suma|SUMA|Sprzedaż")[0];
-            String replacedString = productsString.replaceAll("([0-9]+,[0-9]{2})(?!\\s|$)", "|$1/");
+            replacedString = productsString.replaceAll("([0-9]+,[0-9]{2})(?!\\s|$)", "|$1/");
             partiallyCut = replacedString.split("/");
         }
+
+        companyNameField.setText(replacedString);
+        Toast.makeText(this, "Ocr result: " + replacedString, Toast.LENGTH_LONG).show();
 
         for (String item : partiallyCut) {
             if (item.matches(".*[0-9]+,[0-9]{2}")) {
