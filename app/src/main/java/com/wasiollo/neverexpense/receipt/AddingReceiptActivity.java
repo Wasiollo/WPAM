@@ -217,11 +217,11 @@ public class AddingReceiptActivity extends AppCompatActivity {
             companyName = "";
         }
 
-        String replacedString = ocrResult.replaceAll("([0-9]+,[0-9]{2})(?!\\s|$)", "|$1/");
+        String replacedString = ocrResult.replaceAll("([0-9]+,[0-9]{2})", "|$1/");
         String[] partiallyCut = replacedString.split("/");
         if (!companyName.equals("")) {
             String productsString = splittedByBillLabel[1].split("suma|SUMA|Sprzedaż")[0];
-            replacedString = productsString.replaceAll("([0-9]+,[0-9]{2})(?!\\s|$)", "|$1/");
+            replacedString = productsString.replaceAll("([0-9]+,[0-9]{2})", "|$1/");
             partiallyCut = replacedString.split("/");
         }
 
