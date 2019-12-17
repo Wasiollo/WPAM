@@ -188,6 +188,8 @@ public class AddingReceiptActivity extends AppCompatActivity {
 //        companyNameField.setText(parsedOcrResult.getCompanyName());
 
         for (int i = 1; i < parsedOcrResult.getProducts().size(); ++i) {
+            companyNameField.setText(companyNameField.getText().toString() + " ! " + parsedOcrResult.getProducts().get(i-1));
+
             onAddField(parentLinearLayout);
         }
         final int childCount = parentLinearLayout.getChildCount();
@@ -207,7 +209,6 @@ public class AddingReceiptActivity extends AppCompatActivity {
     }
 
     private ParsedOcrResult parseOcrResult(String ocrResult) {
-        EditText companyNameField = findViewById(R.id.companyName);
 
         ParsedOcrResult parsedOcrResult = new ParsedOcrResult();
         List<String> productList = new ArrayList<>();
@@ -224,9 +225,6 @@ public class AddingReceiptActivity extends AppCompatActivity {
             replacedString = productsString.replaceAll("([0-9]+,[0-9]{2})", "|$1/");
             partiallyCut = replacedString.split("/");
         }
-
-        companyNameField.setText(replacedString);
-        Toast.makeText(this, "Ocr result: " + replacedString, Toast.LENGTH_LONG).show();
 
         for (String item : partiallyCut) {
             if (item.matches(".*[0-9]+,[0-9]{2}")) {
