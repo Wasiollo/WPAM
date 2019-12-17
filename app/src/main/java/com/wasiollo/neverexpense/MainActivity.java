@@ -44,9 +44,9 @@ public class MainActivity extends AppCompatActivity {
             startActivity(receiptDetailsIntent);
         }, receipt -> {
             View.OnClickListener onClickListener = v -> {
-                balanceViewModel.deleteReceipt(receipt.getId());
-                getReceipts(balanceId);
-                balanceAdapter.notifyDataSetChanged();
+                Integer receiptId = receipt.getId();
+                balanceViewModel.deleteReceipt(receiptId);
+                balanceAdapter.removeReceipt(receiptId);
             };
             Snackbar.make(this.findViewById(android.R.id.content), "Deleting receipt", Snackbar.LENGTH_LONG)
                     .setAction("Delete", onClickListener)

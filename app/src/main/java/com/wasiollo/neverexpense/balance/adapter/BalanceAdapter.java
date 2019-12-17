@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceRecyclerViewItemHolder> {
 
@@ -88,6 +89,11 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceR
     public void onBindViewHolder(BalanceRecyclerViewItemHolder holder, int position) {
         holder.bind(receipts.get(position), listener, longClickListener);
 
+    }
+
+    public void removeReceipt(Integer receiptId){
+        this.receipts = receipts.stream().filter(receipt -> !receipt.getId().equals(receiptId)).collect(Collectors.toList());
+        notifyDataSetChanged();
     }
 
     @Override
