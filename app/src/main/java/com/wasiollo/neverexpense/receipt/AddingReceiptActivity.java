@@ -236,7 +236,7 @@ public class AddingReceiptActivity extends AppCompatActivity {
         StringBuilder kekStirng = new StringBuilder();
         for (String item : partiallyCut) {
 
-            if (item.matches(".*[0-9]+,[0-9]{2}")) {
+            if (item.matches(".*[0-9]+,[0-9]{2}.*")) {
                 kekStirng.append("*");
                 productList.add(item);
             }
