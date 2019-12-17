@@ -46,5 +46,8 @@ public class BalanceViewModel extends AndroidViewModel {
         balanceRepository.insert(balanceWithReceipts);
     }
 
+    public void deleteReceipt(Integer receiptId){
+        receiptRepository.deleteReceipt(receiptId);
+    }
 
 }

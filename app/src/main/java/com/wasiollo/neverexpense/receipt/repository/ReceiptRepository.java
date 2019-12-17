@@ -50,4 +50,8 @@ public class ReceiptRepository {
     public LiveData<List<Receipt>> getAll(){
         return receiptDao.getAllReceipts();
     }
+
+    public void deleteReceipt(Integer receiptId){
+        receiptDao.deleteReceipt(receiptId);
+    }
 }

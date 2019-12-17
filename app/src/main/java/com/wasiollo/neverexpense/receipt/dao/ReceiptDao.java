@@ -34,6 +34,9 @@ public abstract class ReceiptDao {
     @Query("DELETE FROM receipt")
     public abstract void deleteAll();
 
+    @Query("DELETE FROM receipt WHERE id = :receiptId")
+    public abstract void deleteReceipt(Integer receiptId);
+
     @Query("SELECT * FROM receipt")
     public abstract LiveData<List<Receipt>> getAllReceipts();
 

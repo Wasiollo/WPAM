@@ -1,9 +1,11 @@
 package com.wasiollo.neverexpense;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,7 +45,11 @@ public class MainActivity extends AppCompatActivity {
             receiptDetailsIntent.putExtras(receiptDetailsExtras);
             startActivity(receiptDetailsIntent);
         }, receipt -> {
-            Toast.makeText(this, "Receipt cost : " + receipt.getCost(), Toast.LENGTH_LONG).show();
+            View.OnClickListener onClickListener = v -> balanceViewModel.deleteReceipt(receipt.getId());
+            Snackbar.make(this.findViewById(android.R.id.content), "Deleting receipt", Snackbar.LENGTH_LONG)
+                    .setAction("Delete", onClickListener)
+                    .setActionTextColor(Color.RED)
+                    .show();
             return true;
         });
 
