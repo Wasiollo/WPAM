@@ -233,16 +233,20 @@ public class AddingReceiptActivity extends AppCompatActivity {
 
         EditText companyNameField = findViewById(R.id.companyName);
 
+        StringBuilder kekStirng = new StringBuilder();
         for (String item : partiallyCut) {
-            companyNameField.setText(companyNameField.getText().toString() + " ! "+ item);
+
             if (item.matches(".*[0-9]+,[0-9]{2}")) {
+                kekStirng.append("*");
                 productList.add(item);
             }
+            companyNameField.setText(companyNameField.getText().toString() + " ! "+ item);
         }
+        companyNameField.setText(companyNameField.getText().toString() + kekStirng);
 
         parsedOcrResult.setCompanyName(companyName);
         parsedOcrResult.setProducts(productList);
-        Toast.makeText(this, "ocr parsed size : " + parsedOcrResult.getProducts().size(), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "ocr parsed size : " + productList.size(), Toast.LENGTH_LONG).show();
         return parsedOcrResult;
     }
 
@@ -342,6 +346,9 @@ public class AddingReceiptActivity extends AppCompatActivity {
 
         EditText companyNameField = findViewById(R.id.companyName);
         String companyName = companyNameField.getText().toString();
+        if (companyName.length() > 25){
+            companyName = companyName.substring(0, 24);
+        }
         if (companyName.isEmpty()) {
             companyName = "Brak Nazwy";
         }
