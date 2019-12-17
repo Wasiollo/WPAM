@@ -184,16 +184,16 @@ public class AddingReceiptActivity extends AppCompatActivity {
         ParsedOcrResult parsedOcrResult = parseOcrResult(ocrResult);
 
         EditText companyNameField = findViewById(R.id.companyName);
-        Toast.makeText(this, "ocr parsed size : " + parsedOcrResult.getProducts().size(), Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, "ocr parsed size : " + parsedOcrResult.getProducts().size(), Toast.LENGTH_LONG).show();
 //        companyNameField.setText(parsedOcrResult.getCompanyName());
-        StringBuilder x = new StringBuilder(companyNameField.getText().toString());
+//        StringBuilder x = new StringBuilder(companyNameField.getText().toString());
 
         for (int i = 1; i < parsedOcrResult.getProducts().size(); ++i) {
-            x.append(" ! ").append(parsedOcrResult.getProducts().get(i - 1));
+//            x.append(" ! ").append(parsedOcrResult.getProducts().get(i - 1));
 
             onAddField(parentLinearLayout);
         }
-        companyNameField.setText( x.toString());
+//        companyNameField.setText( x.toString());
         final int childCount = parentLinearLayout.getChildCount();
         List<String> products = parsedOcrResult.getProducts();
         for (int i = 0; i < childCount - 1; ++i) { //last one is add field button
@@ -228,7 +228,10 @@ public class AddingReceiptActivity extends AppCompatActivity {
             partiallyCut = replacedString.split("/");
         }
 
+        EditText companyNameField = findViewById(R.id.companyName);
+
         for (String item : partiallyCut) {
+            companyNameField.setText(companyNameField.getText().toString() + " ! "+ item);
             if (item.matches(".*[0-9]+,[0-9]{2}")) {
                 productList.add(item);
             }
@@ -236,6 +239,7 @@ public class AddingReceiptActivity extends AppCompatActivity {
 
         parsedOcrResult.setCompanyName(companyName);
         parsedOcrResult.setProducts(productList);
+        Toast.makeText(this, "ocr parsed size : " + parsedOcrResult.getProducts().size(), Toast.LENGTH_LONG).show();
         return parsedOcrResult;
     }
 
