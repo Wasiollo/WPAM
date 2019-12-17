@@ -194,18 +194,22 @@ public class AddingReceiptActivity extends AppCompatActivity {
         List<String> products = parsedOcrResult.getProducts();
         for (int i = 0; i < childCount - 1; ++i) { //last one is add field button
             LinearLayout v = (LinearLayout) parentLinearLayout.getChildAt(i);
-            String productWithPrice = products.get(i);
-            productWithPrice = productWithPrice.replaceAll(",", ".");
-            String productName = productWithPrice.split("\\|")[0];
-            String productPrice = products.get(i).split("\\|")[1];
-            ((EditText) v.getChildAt(0)).setText(productName);
-            ((EditText) v.getChildAt(1)).setText(productPrice);
+            if (products.size() > i) {
+                String productWithPrice = products.get(i);
+                productWithPrice = productWithPrice.replaceAll(",", ".");
+                String productName = productWithPrice.split("\\|")[0];
+                String productPrice = products.get(i).split("\\|")[1];
+                ((EditText) v.getChildAt(0)).setText(productName);
+                ((EditText) v.getChildAt(1)).setText(productPrice);
+            }
         }
 
     }
 
     private ParsedOcrResult parseOcrResult(String ocrResult) {
+        Toast.makeText(this, "Ocr result: " + ocrResult, Toast.LENGTH_LONG).show();
         ParsedOcrResult parsedOcrResult = new ParsedOcrResult();
+        List<String> productList = new ArrayList<>();
         String[] splittedByBillLabel = ocrResult.split("Paragon");
         String companyName = splittedByBillLabel[0];
         if (companyName.equals(ocrResult)) {
@@ -221,11 +225,12 @@ public class AddingReceiptActivity extends AppCompatActivity {
 
         for (String item : partiallyCut) {
             if (item.matches(".*[0-9]+,[0-9]{2}")) {
-                parsedOcrResult.getProducts().add(item);
+                productList.add(item);
             }
         }
 
         parsedOcrResult.setCompanyName(companyName);
+        parsedOcrResult.setProducts(productList);
         return parsedOcrResult;
     }
 
