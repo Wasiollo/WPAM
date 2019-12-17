@@ -183,9 +183,9 @@ public class AddingReceiptActivity extends AppCompatActivity {
 
         ParsedOcrResult parsedOcrResult = parseOcrResult(ocrResult);
 
-        EditText totalCostField = findViewById(R.id.companyName);
-        Toast.makeText(this, "ocr text : " + parsedOcrResult.getCompanyName(), Toast.LENGTH_LONG).show();
-        totalCostField.setText(parsedOcrResult.getCompanyName());
+        EditText companyNameField = findViewById(R.id.companyName);
+//        Toast.makeText(this, "ocr text : " + parsedOcrResult.getCompanyName(), Toast.LENGTH_LONG).show();
+//        companyNameField.setText(parsedOcrResult.getCompanyName());
 
         for (int i = 1; i < parsedOcrResult.getProducts().size(); ++i) {
             onAddField(parentLinearLayout);
@@ -207,6 +207,8 @@ public class AddingReceiptActivity extends AppCompatActivity {
     }
 
     private ParsedOcrResult parseOcrResult(String ocrResult) {
+        EditText companyNameField = findViewById(R.id.companyName);
+        companyNameField.setText(ocrResult);
         Toast.makeText(this, "Ocr result: " + ocrResult, Toast.LENGTH_LONG).show();
         ParsedOcrResult parsedOcrResult = new ParsedOcrResult();
         List<String> productList = new ArrayList<>();
