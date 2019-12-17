@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         }, receipt -> {
             View.OnClickListener onClickListener = v -> {
                 balanceViewModel.deleteReceipt(receipt.getId());
+                getReceipts(balanceId);
                 balanceAdapter.notifyDataSetChanged();
             };
             Snackbar.make(this.findViewById(android.R.id.content), "Deleting receipt", Snackbar.LENGTH_LONG)
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         balanceViewModel = ViewModelProviders.of(this).get(BalanceViewModel.class);
 
-        balanceViewModel.getReceiptsByBalanceId(balanceId).observe(this, receipts -> balanceAdapter.setReceipts(receipts));
+        getReceipts(balanceId);
 
         FloatingActionButton fab = findViewById(R.id.addReceiptButton);
         fab.setOnClickListener(view -> {
@@ -71,6 +72,10 @@ public class MainActivity extends AppCompatActivity {
             addingReceiptIntent.putExtras(addingReceiptExtras);
             startActivity(addingReceiptIntent);
         });
+    }
+
+    private void getReceipts(Integer balanceId){
+        balanceViewModel.getReceiptsByBalanceId(balanceId).observe(this, receipts -> balanceAdapter.setReceipts(receipts));
     }
 
     @Override
