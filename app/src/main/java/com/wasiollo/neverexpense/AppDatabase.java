@@ -40,14 +40,16 @@ public abstract class AppDatabase extends RoomDatabase {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            AppDatabase.class, "app_database")
-                            .addCallback(sRoomDatabaseCallback).build();
+                            AppDatabase.class, "balance_db")
+//                            .addCallback(sRoomDatabaseCallback)
+                            .allowMainThreadQueries()
+                            .build();
                 }
             }
         }
         return INSTANCE;
     }
-
+/*
     private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
         @Override
         public void onOpen(@NonNull SupportSQLiteDatabase db) {
@@ -115,6 +117,6 @@ public abstract class AppDatabase extends RoomDatabase {
 
             });
         }
-    };
+    };*/
 
 }

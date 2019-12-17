@@ -22,14 +22,14 @@
         android:text="@string/button_save"
 
         android:textColor="@color/addButtonColor"
-        app:layout_constraintBottom_toTopOf="@id/sumLabel"
+        app:layout_constraintBottom_toTopOf="@id/companyNameLabel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_weight="1" />
 
     <TextView
-        android:id="@+id/sumLabel"
+        android:id="@+id/companyNameLabel"
 
         android:layout_width="0dp"
         android:layout_height="50dp"
@@ -39,17 +39,17 @@
         android:layout_marginBottom="0dp"
 
         android:gravity="center"
-        android:text="@string/sumLabel"
+        android:text="@string/companyLabel"
         android:textSize="28sp"
         app:layout_constraintBottom_toTopOf="@id/scrollView"
-        app:layout_constraintEnd_toStartOf="@id/sum"
+        app:layout_constraintEnd_toStartOf="@id/companyName"
         app:layout_constraintHorizontal_weight="2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/save_button"
         app:layout_constraintVertical_weight="1" />
 
     <EditText
-        android:id="@+id/sum"
+        android:id="@+id/companyName"
 
         android:layout_width="0dp"
         android:layout_height="50dp"
@@ -65,7 +65,7 @@
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="3"
-        app:layout_constraintStart_toEndOf="@id/sumLabel"
+        app:layout_constraintStart_toEndOf="@id/companyNameLabel"
         app:layout_constraintTop_toBottomOf="@id/save_button"
         app:layout_constraintVertical_weight="1"
 
@@ -84,7 +84,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sumLabel"
+        app:layout_constraintTop_toBottomOf="@id/companyNameLabel"
         app:layout_constraintVertical_weight="12">
 
         <LinearLayout

@@ -35,6 +35,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 import com.wasiollo.neverexpense.R;
 import com.wasiollo.neverexpense.product.domain.Product;
+import com.wasiollo.neverexpense.receipt.domain.ParsedOcrResult;
 import com.wasiollo.neverexpense.receipt.domain.Receipt;
 import com.wasiollo.neverexpense.receipt.domain.ReceiptWithProducts;
 import com.wasiollo.neverexpense.receipt.view_model.ReceiptViewModel;
@@ -53,7 +54,6 @@ import okhttp3.Response;
 
 public class AddingReceiptActivity extends AppCompatActivity {
 
-    private static final int CAMERA_REQUEST = 1888;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
     private static final long MAX_IMAGE_SIZE = 1024 * 1024;
 
@@ -176,14 +176,57 @@ public class AddingReceiptActivity extends AppCompatActivity {
         return "";
     }
 
-    private void handleApiResult(String apiResult){
+    private void handleApiResult(String apiResult) {
         Gson gson = new Gson();
         JsonObject apiResponse = gson.fromJson(apiResult, JsonObject.class);
         String ocrResult = apiResponse.getAsJsonArray("ParsedResults").get(0).getAsJsonObject().get("ParsedText").getAsString();
 
-        EditText totalCostField = findViewById(R.id.sum);
-        Toast.makeText(this, "ocr text : " + ocrResult, Toast.LENGTH_LONG).show();
-        totalCostField.setText(ocrResult);
+        ParsedOcrResult parsedOcrResult = parseOcrResult(ocrResult);
+
+        EditText totalCostField = findViewById(R.id.companyName);
+        Toast.makeText(this, "ocr text : " + parsedOcrResult.getCompanyName(), Toast.LENGTH_LONG).show();
+        totalCostField.setText(parsedOcrResult.getCompanyName());
+
+        for (int i = 1; i < parsedOcrResult.getProducts().size(); ++i) {
+            onAddField(parentLinearLayout);
+        }
+        final int childCount = parentLinearLayout.getChildCount();
+        List<String> products = parsedOcrResult.getProducts();
+        for (int i = 0; i < childCount - 1; ++i) { //last one is add field button
+            LinearLayout v = (LinearLayout) parentLinearLayout.getChildAt(i);
+            String productWithPrice = products.get(i);
+            productWithPrice = productWithPrice.replaceAll(",", ".");
+            String productName = productWithPrice.split("\\|")[0];
+            String productPrice = products.get(i).split("\\|")[1];
+            ((EditText) v.getChildAt(0)).setText(productName);
+            ((EditText) v.getChildAt(1)).setText(productPrice);
+        }
+
+    }
+
+    private ParsedOcrResult parseOcrResult(String ocrResult) {
+        ParsedOcrResult parsedOcrResult = new ParsedOcrResult();
+        String[] splittedByBillLabel = ocrResult.split("Paragon");
+        String companyName = splittedByBillLabel[0];
+        if (companyName.equals(ocrResult)) {
+            companyName = "";
+        }
+
+        String[] partiallyCut = ocrResult.replaceAll("([0-9]+,[0-9]{2})(?!\\s|$)", "|$1/").split("/");
+        if (!companyName.equals("")) {
+            String productsString = splittedByBillLabel[1].split("suma|SUMA|Sprzedaż")[0];
+            String replacedString = productsString.replaceAll("([0-9]+,[0-9]{2})(?!\\s|$)", "|$1/");
+            partiallyCut = replacedString.split("/");
+        }
+
+        for (String item : partiallyCut) {
+            if (item.matches(".*[0-9]+,[0-9]{2}")) {
+                parsedOcrResult.getProducts().add(item);
+            }
+        }
+
+        parsedOcrResult.setCompanyName(companyName);
+        return parsedOcrResult;
     }
 
     public static String convertBitmapToBase64String(Bitmap bitmap) {
@@ -193,10 +236,10 @@ public class AddingReceiptActivity extends AppCompatActivity {
         int currQuality = 55;
 
 //        do {
-            bitmap.compress(Bitmap.CompressFormat.JPEG, currQuality, stream);
-            currSize = stream.toByteArray().length;
-            // limit quality by 5 percent every time
-            currQuality -= 5;
+        bitmap.compress(Bitmap.CompressFormat.JPEG, currQuality, stream);
+        currSize = stream.toByteArray().length;
+        // limit quality by 5 percent every time
+        currQuality -= 5;
 
 //        } while (currSize >= MAX_IMAGE_SIZE);
 
@@ -270,6 +313,9 @@ public class AddingReceiptActivity extends AppCompatActivity {
             LinearLayout v = (LinearLayout) parentLinearLayout.getChildAt(i);
             String itemName = ((EditText) v.getChildAt(0)).getText().toString();
             String itemPrize = ((EditText) v.getChildAt(1)).getText().toString();
+            if (itemPrize.equals("")) {
+                itemPrize = "0";
+            }
             Product newProduct = new Product();
             newProduct.setName(itemName);
             newProduct.setPrice(Double.valueOf(itemPrize));
@@ -277,24 +323,23 @@ public class AddingReceiptActivity extends AppCompatActivity {
         }
         System.out.println(products.size());
 
-        EditText totalCostField = findViewById(R.id.sum);
-        Double totalCost = Double.valueOf(totalCostField.getText().toString());
+        EditText companyNameField = findViewById(R.id.companyName);
+        String companyName = companyNameField.getText().toString();
+        if (companyName.isEmpty()) {
+            companyName = "Brak Nazwy";
+        }
         Receipt receipt = new Receipt();
-        receipt.setCost(totalCost);
-        receipt.setCompany("TEST");
+        receipt.setCost(products.stream().mapToDouble(Product::getPrice).sum());
+        receipt.setCompany(companyName);
         receipt.setDateTime(new Date());
-        receipt.setUserId(1);   //todo
-        receipt.setBalanceId(1);    //todo
-
+        receipt.setUserId(1);
+        receipt.setBalanceId(1);
 
         ReceiptWithProducts receiptWithProducts = new ReceiptWithProducts();
         receiptWithProducts.setProducts(products);
         receiptWithProducts.setReceipt(receipt);
 
         receiptViewModel.insert(receiptWithProducts);
-
-        /*Snackbar.make((View) view.getParent(), "Save clicked", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();*/
 
         onBackPressed();
     }

@@ -1,10 +1,11 @@
 <resources>
     <string name="app_name">NeverExpense</string>
-    <string name="action_settings">Settings</string>
-    <string name="action_logout">Logout</string>
-    <string name="button_save">Save</string>
-    <string name="product_price_empty">Product not saved because price is empty.</string>
-    <string name="hint_word">Insert sum</string>
-    <string name="sumLabel">Total</string>
-    <string name="add_field">Add Field</string>
+    <string name="action_settings">Ustawienia</string>
+    <string name="action_logout">Wyloguj</string>
+    <string name="button_save">Zapisz</string>
+    <string name="product_price_empty">Produkt nie zapisany, ponieważ cena jest pusta</string>
+    <string name="hint_word">Wprowadź nazwę</string>
+    <string name="companyLabel">Firma</string>
+    <string name="add_field">Dodaj</string>
+    <string name="sumLabel">Suma</string>
 </resources>
