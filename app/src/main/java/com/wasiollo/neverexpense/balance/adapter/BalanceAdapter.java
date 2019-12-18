@@ -1,9 +1,6 @@
 package com.wasiollo.neverexpense.balance.adapter;
 
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -51,12 +48,12 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceR
             time = itemView.findViewById(R.id.time);
         }
 
-        public void bind(final Receipt item, final OnItemClickListener listener, OnLongClickListener longClickListener){
-            cost.setText(item.getCost().toString());
+        public void bind(final Receipt item, final OnItemClickListener listener, OnLongClickListener longClickListener) {
+            cost.setText(String.format("%.2f", item.getCost()));
             firm.setText(item.getCompany());
             Date reciptDate = item.getDateTime();
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
-            DateFormat timeFormat = new SimpleDateFormat("hh:mm");
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat timeFormat = new SimpleDateFormat("HH:mm");
             date.setText(dateFormat.format(reciptDate));
             time.setText(timeFormat.format(reciptDate));
 
@@ -73,6 +70,7 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceR
 
     public void setReceipts(List<Receipt> receiptList) {
         receipts = receiptList;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -91,7 +89,7 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceR
 
     }
 
-    public void removeReceipt(Integer receiptId){
+    public void removeReceipt(Integer receiptId) {
         this.receipts = receipts.stream().filter(receipt -> !receipt.getId().equals(receiptId)).collect(Collectors.toList());
         notifyDataSetChanged();
     }

@@ -43,6 +43,6 @@ public abstract class ReceiptDao {
     @Query("SELECT * FROM receipt r WHERE r.balance_id = :balanceId")
     public abstract LiveData<List<Receipt>> getReceiptsByBalanceId(Integer balanceId);
 
-    @Query("SELECT * FROM receipt r WHERE r.id = :receiptId")
+    @Query("SELECT * FROM receipt r WHERE r.id = :receiptId ")
     public abstract LiveData<Receipt> getReceiptById(Integer receiptId);
 }

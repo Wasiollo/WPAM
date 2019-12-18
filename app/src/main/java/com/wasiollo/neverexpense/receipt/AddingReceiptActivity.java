@@ -13,10 +13,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.renderscript.Allocation;
-import android.renderscript.Element;
-import android.renderscript.RenderScript;
-import android.renderscript.ScriptIntrinsicConvolve3x3;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -117,7 +113,6 @@ public class AddingReceiptActivity extends AppCompatActivity {
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
             Bitmap monochromedBitmap = monochromeBitmap(bitmap);
-//            Bitmap sharpenedBitmap = sharpenBitmap(monochromedBitmap);
             doHttpOCR(monochromedBitmap);
         } catch (IOException e) {
             e.printStackTrace();
@@ -184,19 +179,15 @@ public class AddingReceiptActivity extends AppCompatActivity {
         ParsedOcrResult parsedOcrResult = parseOcrResult(ocrResult);
 
         EditText companyNameField = findViewById(R.id.companyName);
-//        Toast.makeText(this, "ocr parsed size : " + parsedOcrResult.getProducts().size(), Toast.LENGTH_LONG).show();
-//        companyNameField.setText(parsedOcrResult.getCompanyName());
-//        StringBuilder x = new StringBuilder(companyNameField.getText().toString());
+        companyNameField.setText(parsedOcrResult.getCompanyName());
 
         for (int i = 1; i < parsedOcrResult.getProducts().size(); ++i) {
-//            x.append(" ! ").append(parsedOcrResult.getProducts().get(i - 1));
-
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             final View rowView = inflater.inflate(R.layout.adding_field, null);
             // Add the new row before the add field button.
             parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - 1);
         }
-//        companyNameField.setText( x.toString());
+
         final int childCount = parentLinearLayout.getChildCount();
         List<String> products = parsedOcrResult.getProducts();
         for (int i = 0; i < childCount - 1; ++i) { //last one is add field button
@@ -205,7 +196,8 @@ public class AddingReceiptActivity extends AppCompatActivity {
                 String productWithPrice = products.get(i);
                 productWithPrice = productWithPrice.replaceAll(",", ".");
                 String productName = productWithPrice.split("\\|")[0];
-                String productPrice = products.get(i).split("\\|")[1];
+                String productPrice = productWithPrice.split("\\|")[1];
+                if (productName.isEmpty()) productName = "BRAK NAZWY";
                 ((EditText) v.getChildAt(0)).setText(productName);
                 ((EditText) v.getChildAt(1)).setText(productPrice);
             }
@@ -214,10 +206,11 @@ public class AddingReceiptActivity extends AppCompatActivity {
     }
 
     private ParsedOcrResult parseOcrResult(String ocrResult) {
+        ocrResult = ocrResult.replaceAll("\r\n", " ");
 
         ParsedOcrResult parsedOcrResult = new ParsedOcrResult();
         List<String> productList = new ArrayList<>();
-        String[] splittedByBillLabel = ocrResult.split("Paragon");
+        String[] splittedByBillLabel = ocrResult.split("PARAGON FISKALNY|PARAGON|Paragon");
         String companyName = splittedByBillLabel[0];
         if (companyName.equals(ocrResult)) {
             companyName = "";
@@ -231,18 +224,12 @@ public class AddingReceiptActivity extends AppCompatActivity {
             partiallyCut = replacedString.split("/");
         }
 
-        EditText companyNameField = findViewById(R.id.companyName);
-
-        StringBuilder kekStirng = new StringBuilder();
         for (String item : partiallyCut) {
 
-            if (item.matches(".*[0-9]+,[0-9]{2}.*")) {
-                kekStirng.append("*");
+            if (item.matches(".*[0-9]+,[0-9]{2}")) {
                 productList.add(item);
             }
-            companyNameField.setText(companyNameField.getText().toString() + " ! "+ item);
         }
-        companyNameField.setText(companyNameField.getText().toString() + kekStirng);
 
         parsedOcrResult.setCompanyName(companyName);
         parsedOcrResult.setProducts(productList);
@@ -251,21 +238,12 @@ public class AddingReceiptActivity extends AppCompatActivity {
     }
 
     public static String convertBitmapToBase64String(Bitmap bitmap) {
-
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        int currSize;
         int currQuality = 55;
 
-//        do {
         bitmap.compress(Bitmap.CompressFormat.JPEG, currQuality, stream);
-        currSize = stream.toByteArray().length;
-        // limit quality by 5 percent every time
-        currQuality -= 5;
-
-//        } while (currSize >= MAX_IMAGE_SIZE);
 
         String encodedString = Base64.encodeToString(stream.toByteArray(), Base64.DEFAULT);
-
         return "data:image/jpeg;base64," + encodedString;
     }
 
@@ -278,36 +256,6 @@ public class AddingReceiptActivity extends AppCompatActivity {
         paint.setColorFilter(new ColorMatrixColorFilter(ma));
         canvas.drawBitmap(bmpSource, 0, 0, paint);
         return bmpMonochrome;
-    }
-
-    private Bitmap sharpenBitmap(Bitmap originalBitmap) {
-        float[] matrix_sharpen =
-                {0, -1, 0,
-                        -1, 5, -1,
-                        0, -1, 0};
-        return createBitmap_convolve(originalBitmap, matrix_sharpen);
-
-    }
-
-    private Bitmap createBitmap_convolve(Bitmap src, float[] coefficients) {
-
-        Bitmap result = Bitmap.createBitmap(src.getWidth(),
-                src.getHeight(), src.getConfig());
-
-        RenderScript renderScript = RenderScript.create(this);
-
-        Allocation input = Allocation.createFromBitmap(renderScript, src);
-        Allocation output = Allocation.createFromBitmap(renderScript, result);
-
-        ScriptIntrinsicConvolve3x3 convolution = ScriptIntrinsicConvolve3x3
-                .create(renderScript, Element.U8_4(renderScript));
-        convolution.setInput(input);
-        convolution.setCoefficients(coefficients);
-        convolution.forEach(output);
-
-        output.copyTo(result);
-        renderScript.destroy();
-        return result;
     }
 
     @Override
@@ -337,6 +285,9 @@ public class AddingReceiptActivity extends AppCompatActivity {
             if (itemPrize.equals("")) {
                 itemPrize = "0";
             }
+            if (itemName.equals("")) {
+                itemName = "BRAK NAZWY";
+            }
             Product newProduct = new Product();
             newProduct.setName(itemName);
             newProduct.setPrice(Double.valueOf(itemPrize));
@@ -346,7 +297,7 @@ public class AddingReceiptActivity extends AppCompatActivity {
 
         EditText companyNameField = findViewById(R.id.companyName);
         String companyName = companyNameField.getText().toString();
-        if (companyName.length() > 25){
+        if (companyName.length() > 25) {
             companyName = companyName.substring(0, 24);
         }
         if (companyName.isEmpty()) {

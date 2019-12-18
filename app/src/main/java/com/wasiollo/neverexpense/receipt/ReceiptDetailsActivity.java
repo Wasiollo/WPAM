@@ -50,7 +50,7 @@ public class ReceiptDetailsActivity extends AppCompatActivity {
         ConstraintLayout header = findViewById(R.id.receiptHeader);
         TextView cost = header.findViewById(R.id.cost);
         if (cost != null) {
-            cost.setText(String.valueOf(totalCost));
+            cost.setText(String.format("%.2f", totalCost));
         }
     }
 

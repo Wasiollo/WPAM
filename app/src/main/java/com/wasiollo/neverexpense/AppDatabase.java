@@ -41,7 +41,6 @@ public abstract class AppDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "balance_db")
-//                            .addCallback(sRoomDatabaseCallback)
                             .allowMainThreadQueries()
                             .build();
                 }
@@ -49,74 +48,4 @@ public abstract class AppDatabase extends RoomDatabase {
         }
         return INSTANCE;
     }
-/*
-    private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
-        @Override
-        public void onOpen(@NonNull SupportSQLiteDatabase db) {
-            super.onOpen(db);
-
-            // If you want to keep data through app restarts,
-            // comment out the following block
-            databaseWriteExecutor.execute(() -> {
-                // Populate the database in the background.
-                // If you want to start with more words, just add them.
-
-                ProductDao productDao = INSTANCE.productDao();
-                productDao.deleteAll();
-
-                ReceiptDao receiptDao = INSTANCE.receiptDao();
-                receiptDao.deleteAll();
-
-                Receipt receipt1 = new Receipt();
-                receipt1.setCompany("Biedronka");
-                receipt1.setCost(6.45);
-                receipt1.setDateTime(new Date());
-                receipt1.setId(1);
-                receipt1.setUserId(1);
-                receipt1.setBalanceId(1);
-
-                Receipt receipt2 = new Receipt();
-                receipt2.setCompany("Lidl");
-                receipt2.setCost(7.94);
-                receipt2.setDateTime(new Date());
-                receipt2.setId(2);
-                receipt2.setUserId(1);
-                receipt2.setBalanceId(1);
-
-                receiptDao.insert(receipt1);
-                receiptDao.insert(receipt2);
-
-                Product product1 = new Product();
-                product1.setId(1);
-                product1.setName("Kajzerka");
-                product1.setPrice(3.46);
-                product1.setReceiptId(1);
-
-                Product product2 = new Product();
-                product2.setId(2);
-                product2.setName("Mleko");
-                product2.setPrice(2.99);
-                product2.setReceiptId(1);
-
-                Product product3 = new Product();
-                product3.setId(3);
-                product3.setName("Czosnek");
-                product3.setPrice(3.45);
-                product3.setReceiptId(2);
-
-                Product product4 = new Product();
-                product4.setId(4);
-                product4.setName("Cebula");
-                product4.setPrice(4.49);
-                product4.setReceiptId(2);
-
-                productDao.insert(product1);
-                productDao.insert(product2);
-                productDao.insert(product3);
-                productDao.insert(product4);
-
-            });
-        }
-    };*/
-
 }

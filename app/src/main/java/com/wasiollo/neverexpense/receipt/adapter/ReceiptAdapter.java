@@ -39,9 +39,7 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ReceiptR
     }
 
     @Override
-    public ReceiptRecyclerViewItemHolder onCreateViewHolder(ViewGroup parent,
-                                                            int viewType) {
-
+    public ReceiptRecyclerViewItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.receipt_recycler_view_item, parent, false);
 
@@ -50,7 +48,7 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ReceiptR
 
     @Override
     public void onBindViewHolder(ReceiptRecyclerViewItemHolder holder, int position) {
-        holder.cost.setText(products.get(position).getPrice().toString());
+        holder.cost.setText(String.format("%.2f", products.get(position).getPrice()));
         holder.product.setText(products.get(position).getName());
     }
 
