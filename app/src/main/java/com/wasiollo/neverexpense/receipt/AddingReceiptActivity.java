@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -55,6 +56,7 @@ public class AddingReceiptActivity extends AppCompatActivity {
 
     private LinearLayout parentLinearLayout;
     private ReceiptViewModel receiptViewModel;
+    private ProgressBar loadingBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +81,7 @@ public class AddingReceiptActivity extends AppCompatActivity {
         receiptViewModel = ViewModelProviders.of(this).get(ReceiptViewModel.class);
 
         parentLinearLayout = findViewById(R.id.parent_linear_layout);
+        loadingBar = findViewById(R.id.loading);
 
     }
 
@@ -166,6 +169,7 @@ public class AddingReceiptActivity extends AppCompatActivity {
                 }
             }
         };
+        loadingBar.setVisibility(View.VISIBLE);
         asyncTask.execute();
 
         return "";
@@ -203,6 +207,7 @@ public class AddingReceiptActivity extends AppCompatActivity {
             }
         }
 
+        loadingBar.setVisibility(View.GONE);
     }
 
     private ParsedOcrResult parseOcrResult(String ocrResult) {

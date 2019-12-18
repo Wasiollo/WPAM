@@ -7,6 +7,7 @@
     <color name="lightBackgroundColor">#EEEEEE</color>
 
     <color name="addButtonColor">@color/colorPrimary</color>
+    <color name="loadingBarColor">#FF9800</color>
     <color name="addButtonCrossColor">@color/basicBackgroundColor</color>
 
     <color name="saveButtonColor">#d3d3d3</color>
