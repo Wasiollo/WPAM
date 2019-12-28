@@ -176,6 +176,7 @@ public class AddingReceiptActivity extends AppCompatActivity {
     }
 
     private void handleApiResult(String apiResult) {
+        loadingBar.setVisibility(View.GONE);
         Gson gson = new Gson();
         JsonObject apiResponse = gson.fromJson(apiResult, JsonObject.class);
         String ocrResult = apiResponse.getAsJsonArray("ParsedResults").get(0).getAsJsonObject().get("ParsedText").getAsString();
@@ -207,7 +208,7 @@ public class AddingReceiptActivity extends AppCompatActivity {
             }
         }
 
-        loadingBar.setVisibility(View.GONE);
+
     }
 
     private ParsedOcrResult parseOcrResult(String ocrResult) {
